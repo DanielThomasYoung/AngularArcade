@@ -1,0 +1,50 @@
+.arcade-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+  color: var(--gray-100);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.game-button {
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--bright-blue) 10%, transparent);
+  border: 2px solid var(--bright-blue);
+  border-radius: 12px;
+  color: var(--gray-100);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-button:hover {
+  background: color-mix(in srgb, var(--bright-blue) 20%, transparent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.game-button:active {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .game-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}

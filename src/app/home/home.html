@@ -1,0 +1,9 @@
+<div class="arcade-container">
+  <div class="game-grid">
+    @for (game of games; track game.id) {
+    <button class="game-button" (click)="selectGame(game)">
+      {{ game.name }}
+    </button>
+    }
+  </div>
+</div>
