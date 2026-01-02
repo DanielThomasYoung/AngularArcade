@@ -1,0 +1,40 @@
+<div class="game-container">
+  <div class="game-header">
+    <div class="left">
+      <h2>Pente</h2>
+    </div>
+
+    <div class="center">
+      @if (winner()) {
+      <h2>Winner: {{ winner() === 1 ? 'Red' : 'Blue' }}</h2>
+      } @else {
+      <h2>Turn: {{ currentPlayer() === 1 ? 'Red' : 'Blue' }}</h2>
+      }
+    </div>
+
+    <div class="right">
+      <div class="right-slot">
+        <button class="pill" [class.hidden]="!winner()" (click)="newGame()">New Game</button>
+
+        <div class="captures" [class.hidden]="winner()">
+          <h2>Red Captures: {{ redCaptures() }}</h2>
+          <h2>Blue Captures: {{ blueCaptures() }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-grid">
+    @for (row of board(); track $index; let rowIndex = $index) { @for (cell of row; track $index;
+    let colIndex = $index) {
+    <button
+      class="game-button"
+      [class.player1]="cell === 1"
+      [class.player2]="cell === 2"
+      (click)="makeMove(rowIndex, colIndex)"
+    >
+      {{ cell === 0 ? '' : cell === 1 ? 'R' : 'B' }}
+    </button>
+    } }
+  </div>
+</div>

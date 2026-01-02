@@ -16,7 +16,7 @@ main {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  box-sizing: inherit;
+  box-sizing: border-box;
   position: relative;
 }
 

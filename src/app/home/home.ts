@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './home.css',
 })
 export class Home {
+  private router = inject(Router);
+  
   games = [
     { id: 1, name: 'Game 1' },
     { id: 2, name: 'Game 2' },
@@ -20,14 +23,12 @@ export class Home {
     { id: 10, name: 'Game 10' },
     { id: 11, name: 'Game 11' },
     { id: 12, name: 'Game 12' },
-    { id: 13, name: 'Game 13' },
-    { id: 14, name: 'Game 14' },
-    { id: 15, name: 'Game 15' },
-    { id: 16, name: 'Game 16' },
   ];
 
   selectGame(game: { id: number; name: string }) {
     console.log('Selected:', game.name);
-    // Later you'll navigate to the game here
+    if (game.id === 1) {
+      this.router.navigate(['/game1']);
+    }
   }
 }

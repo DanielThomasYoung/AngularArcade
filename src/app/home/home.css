@@ -1,6 +1,6 @@
 .arcade-container {
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -34,7 +34,7 @@ h2 {
 
 .game-button:hover {
   background: color-mix(in srgb, var(--bright-blue) 20%, transparent);
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -42,7 +42,7 @@ h2 {
   transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .game-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
