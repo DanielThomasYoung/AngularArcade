@@ -64,7 +64,7 @@ export class Game1 {
         break;
       }
     }
-    for (let i = rowIndex - 1; i > rowIndex - 5; i--) {
+    for (let i = rowIndex - 1; i >= 0 && i > rowIndex - 5; i--) {
       if (this.board()[i][colIndex] === player) {
         sum++;
       } else {
@@ -72,7 +72,7 @@ export class Game1 {
       }
     }
     if (sum >= 5) {
-      console.log('win', player);
+      return player;
     }
 
     // Horizontal
