@@ -1,5 +1,18 @@
 import { Component, signal } from '@angular/core';
 
+const BOARD_SIZE = 40;
+const WIN_LENGTH = 5;
+const CAPTURE_DIRECTIONS = [
+  [0, 1],
+  [0, -1],
+  [1, 0],
+  [-1, 0],
+  [1, 1],
+  [-1, -1],
+  [1, -1],
+  [-1, 1],
+] as const;
+
 @Component({
   selector: 'app-game1',
   imports: [],
@@ -7,7 +20,7 @@ import { Component, signal } from '@angular/core';
   styleUrl: './game1.css',
 })
 export class Game1 {
-  board = signal<number[][]>(Array.from({ length: 40 }, () => new Array(40).fill(0)));
+  board = signal<number[][]>(this.createEmptyBoard());
 
   currentPlayer = signal(1);
   redCaptures = signal(0);
@@ -28,11 +41,10 @@ export class Game1 {
       return newBoard;
     });
 
-  
     if (this.checkForWin(rowIndex, colIndex, currentPlayer)) {
       this.winner.set(currentPlayer);
     }
-    
+
     const newCaptures = this.checkForCaptures(rowIndex, colIndex, currentPlayer);
 
     if (newCaptures > 0) {
@@ -55,52 +67,52 @@ export class Game1 {
   }
 
   checkForWin(rowIndex: number, colIndex: number, player: number) {
-    // Veritcal
+    // Vertical
     let sum = 1;
-    for (let i = rowIndex + 1; i < 40 && i < rowIndex + 5; i++) {
+    for (let i = rowIndex + 1; i < BOARD_SIZE && i < rowIndex + WIN_LENGTH; i++) {
       if (this.board()[i][colIndex] === player) {
         sum++;
       } else {
         break;
       }
     }
-    for (let i = rowIndex - 1; i >= 0 && i > rowIndex - 5; i--) {
+    for (let i = rowIndex - 1; i >= 0 && i > rowIndex - WIN_LENGTH; i--) {
       if (this.board()[i][colIndex] === player) {
         sum++;
       } else {
         break;
       }
     }
-    if (sum >= 5) {
+    if (sum >= WIN_LENGTH) {
       return player;
     }
 
     // Horizontal
     sum = 1;
-    for (let i = colIndex + 1; i < 40 && i < colIndex + 5; i++) {
+    for (let i = colIndex + 1; i < BOARD_SIZE && i < colIndex + WIN_LENGTH; i++) {
       if (this.board()[rowIndex][i] === player) {
         sum++;
       } else {
         break;
       }
     }
-    for (let i = colIndex - 1; i >= 0 && i > colIndex - 5; i--) {
+    for (let i = colIndex - 1; i >= 0 && i > colIndex - WIN_LENGTH; i--) {
       if (this.board()[rowIndex][i] === player) {
         sum++;
       } else {
         break;
       }
     }
-    if (sum >= 5) {
+    if (sum >= WIN_LENGTH) {
       return player;
     }
 
     // Diagonal (top-left to bottom-right)
     sum = 1;
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < WIN_LENGTH; i++) {
       if (
-        rowIndex + i < 40 &&
-        colIndex + i < 40 &&
+        rowIndex + i < BOARD_SIZE &&
+        colIndex + i < BOARD_SIZE &&
         this.board()[rowIndex + i][colIndex + i] === player
       ) {
         sum++;
@@ -108,7 +120,7 @@ export class Game1 {
         break;
       }
     }
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < WIN_LENGTH; i++) {
       if (
         rowIndex - i >= 0 &&
         colIndex - i >= 0 &&
@@ -119,15 +131,15 @@ export class Game1 {
         break;
       }
     }
-    if (sum >= 5) {
+    if (sum >= WIN_LENGTH) {
       return player;
     }
 
     // Diagonal (top-right to bottom-left)
     sum = 1;
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < WIN_LENGTH; i++) {
       if (
-        rowIndex + i < 40 &&
+        rowIndex + i < BOARD_SIZE &&
         colIndex - i >= 0 &&
         this.board()[rowIndex + i][colIndex - i] === player
       ) {
@@ -136,10 +148,10 @@ export class Game1 {
         break;
       }
     }
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < WIN_LENGTH; i++) {
       if (
         rowIndex - i >= 0 &&
-        colIndex + i < 40 &&
+        colIndex + i < BOARD_SIZE &&
         this.board()[rowIndex - i][colIndex + i] === player
       ) {
         sum++;
@@ -147,7 +159,7 @@ export class Game1 {
         break;
       }
     }
-    if (sum >= 5) {
+    if (sum >= WIN_LENGTH) {
       return player;
     }
 
@@ -158,160 +170,60 @@ export class Game1 {
     const opponent = player === 1 ? 2 : 1;
     let totalCaptures = 0;
 
-    // Horizontal right: player, opp, opp, player
-    if (
-      colIndex + 3 < 100 &&
-      this.board()[rowIndex][colIndex + 1] === opponent &&
-      this.board()[rowIndex][colIndex + 2] === opponent &&
-      this.board()[rowIndex][colIndex + 3] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex] = [...board[rowIndex]];
-        newBoard[rowIndex][colIndex + 1] = 0;
-        newBoard[rowIndex][colIndex + 2] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
-    }
+    for (const [rowDirection, colDirection] of CAPTURE_DIRECTIONS) {
+      const firstRow = rowIndex + rowDirection;
+      const firstCol = colIndex + colDirection;
+      const secondRow = rowIndex + rowDirection * 2;
+      const secondCol = colIndex + colDirection * 2;
+      const anchorRow = rowIndex + rowDirection * 3;
+      const anchorCol = colIndex + colDirection * 3;
 
-    // Horizontal left: player, opp, opp, player
-    if (
-      colIndex - 3 >= 0 &&
-      this.board()[rowIndex][colIndex - 1] === opponent &&
-      this.board()[rowIndex][colIndex - 2] === opponent &&
-      this.board()[rowIndex][colIndex - 3] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex] = [...board[rowIndex]];
-        newBoard[rowIndex][colIndex - 1] = 0;
-        newBoard[rowIndex][colIndex - 2] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
-    }
+      if (
+        !this.isInBounds(firstRow, firstCol) ||
+        !this.isInBounds(secondRow, secondCol) ||
+        !this.isInBounds(anchorRow, anchorCol)
+      ) {
+        continue;
+      }
 
-    // Vertical down: player, opp, opp, player
-    if (
-      rowIndex + 3 < 100 &&
-      this.board()[rowIndex + 1][colIndex] === opponent &&
-      this.board()[rowIndex + 2][colIndex] === opponent &&
-      this.board()[rowIndex + 3][colIndex] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex + 1] = [...board[rowIndex + 1]];
-        newBoard[rowIndex + 2] = [...board[rowIndex + 2]];
-        newBoard[rowIndex + 1][colIndex] = 0;
-        newBoard[rowIndex + 2][colIndex] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
-    }
+      if (
+        this.board()[firstRow][firstCol] === opponent &&
+        this.board()[secondRow][secondCol] === opponent &&
+        this.board()[anchorRow][anchorCol] === player
+      ) {
+        this.board.update((board) => {
+          const newBoard = [...board];
+          const rowsToCopy = new Set([firstRow, secondRow]);
 
-    // Vertical up: player, opp, opp, player
-    if (
-      rowIndex - 3 >= 0 &&
-      this.board()[rowIndex - 1][colIndex] === opponent &&
-      this.board()[rowIndex - 2][colIndex] === opponent &&
-      this.board()[rowIndex - 3][colIndex] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex - 1] = [...board[rowIndex - 1]];
-        newBoard[rowIndex - 2] = [...board[rowIndex - 2]];
-        newBoard[rowIndex - 1][colIndex] = 0;
-        newBoard[rowIndex - 2][colIndex] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
-    }
+          for (const row of rowsToCopy) {
+            newBoard[row] = [...board[row]];
+          }
 
-    // Diagonal down-right: player, opp, opp, player
-    if (
-      rowIndex + 3 < 100 &&
-      colIndex + 3 < 100 &&
-      this.board()[rowIndex + 1][colIndex + 1] === opponent &&
-      this.board()[rowIndex + 2][colIndex + 2] === opponent &&
-      this.board()[rowIndex + 3][colIndex + 3] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex + 1] = [...board[rowIndex + 1]];
-        newBoard[rowIndex + 2] = [...board[rowIndex + 2]];
-        newBoard[rowIndex + 1][colIndex + 1] = 0;
-        newBoard[rowIndex + 2][colIndex + 2] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
-    }
+          newBoard[firstRow][firstCol] = 0;
+          newBoard[secondRow][secondCol] = 0;
 
-    // Diagonal up-left: player, opp, opp, player
-    if (
-      rowIndex - 3 >= 0 &&
-      colIndex - 3 >= 0 &&
-      this.board()[rowIndex - 1][colIndex - 1] === opponent &&
-      this.board()[rowIndex - 2][colIndex - 2] === opponent &&
-      this.board()[rowIndex - 3][colIndex - 3] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex - 1] = [...board[rowIndex - 1]];
-        newBoard[rowIndex - 2] = [...board[rowIndex - 2]];
-        newBoard[rowIndex - 1][colIndex - 1] = 0;
-        newBoard[rowIndex - 2][colIndex - 2] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
-    }
-
-    // Diagonal down-left: player, opp, opp, player
-    if (
-      rowIndex + 3 < 100 &&
-      colIndex - 3 >= 0 &&
-      this.board()[rowIndex + 1][colIndex - 1] === opponent &&
-      this.board()[rowIndex + 2][colIndex - 2] === opponent &&
-      this.board()[rowIndex + 3][colIndex - 3] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex + 1] = [...board[rowIndex + 1]];
-        newBoard[rowIndex + 2] = [...board[rowIndex + 2]];
-        newBoard[rowIndex + 1][colIndex - 1] = 0;
-        newBoard[rowIndex + 2][colIndex - 2] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
-    }
-
-    // Diagonal up-right: player, opp, opp, player
-    if (
-      rowIndex - 3 >= 0 &&
-      colIndex + 3 < 100 &&
-      this.board()[rowIndex - 1][colIndex + 1] === opponent &&
-      this.board()[rowIndex - 2][colIndex + 2] === opponent &&
-      this.board()[rowIndex - 3][colIndex + 3] === player
-    ) {
-      this.board.update((board) => {
-        const newBoard = [...board];
-        newBoard[rowIndex - 1] = [...board[rowIndex - 1]];
-        newBoard[rowIndex - 2] = [...board[rowIndex - 2]];
-        newBoard[rowIndex - 1][colIndex + 1] = 0;
-        newBoard[rowIndex - 2][colIndex + 2] = 0;
-        return newBoard;
-      });
-      totalCaptures += 1;
+          return newBoard;
+        });
+        totalCaptures += 1;
+      }
     }
 
     return totalCaptures;
   }
 
   newGame() {
-    this.board.set(Array.from({ length: 40 }, () => Array.from({ length: 40 }, () => 0)));
+    this.board.set(this.createEmptyBoard());
     this.currentPlayer.set(1);
     this.redCaptures.set(0);
     this.blueCaptures.set(0);
     this.winner.set(0);
+  }
+
+  private createEmptyBoard() {
+    return Array.from({ length: BOARD_SIZE }, () => Array.from({ length: BOARD_SIZE }, () => 0));
+  }
+
+  private isInBounds(rowIndex: number, colIndex: number) {
+    return rowIndex >= 0 && rowIndex < BOARD_SIZE && colIndex >= 0 && colIndex < BOARD_SIZE;
   }
 }
