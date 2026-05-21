@@ -1,9 +1,7 @@
 package com.example.pente.game;
 
-import java.util.UUID;
-
 public record GameResponse(
-    UUID id,
+    String id,
     int[][] board,
     int currentPlayer,
     int redCaptures,

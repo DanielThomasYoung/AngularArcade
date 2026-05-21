@@ -47,7 +47,7 @@ class GameServiceTest {
 
   @Test
   void capturesAcrossTheTopEdge() {
-    GameState game = new GameState(UUID.randomUUID());
+    GameState game = new GameState(UUID.randomUUID().toString().substring(0, 6));
     game.board[0][1] = 2;
     game.board[0][2] = 2;
     game.board[0][3] = 1;
@@ -62,7 +62,7 @@ class GameServiceTest {
 
   @Test
   void winsWithFiveInARow() {
-    GameState game = new GameState(UUID.randomUUID());
+    GameState game = new GameState(UUID.randomUUID().toString().substring(0, 6));
     game.board[0][0] = 1;
     game.board[0][1] = 1;
     game.board[0][2] = 1;
@@ -76,7 +76,7 @@ class GameServiceTest {
 
   @Test
   void winsWithFiveCaptures() {
-    GameState game = new GameState(UUID.randomUUID());
+    GameState game = new GameState(UUID.randomUUID().toString().substring(0, 6));
     game.redCaptures = 4;
     game.board[0][1] = 2;
     game.board[0][2] = 2;

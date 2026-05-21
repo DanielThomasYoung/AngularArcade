@@ -1,11 +1,9 @@
 package com.example.pente.game;
 
-import java.util.UUID;
-
 class GameState {
   static final int BOARD_SIZE = 19;
 
-  final UUID id;
+  final String id;
   final int[][] board;
   int currentPlayer = 1;
   int redCaptures = 0;
@@ -13,7 +11,7 @@ class GameState {
   int winner = 0;
   WinReason winReason = null;
 
-  GameState(UUID id) {
+  GameState(String id) {
     this.id = id;
     this.board = new int[BOARD_SIZE][BOARD_SIZE];
   }

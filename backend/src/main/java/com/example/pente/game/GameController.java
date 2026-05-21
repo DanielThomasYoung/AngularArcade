@@ -1,6 +1,5 @@
 package com.example.pente.game;
 
-import java.util.UUID;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,17 +24,17 @@ class GameController {
   }
 
   @GetMapping("/{id}")
-  GameResponse getGame(@PathVariable UUID id) {
+  GameResponse getGame(@PathVariable String id) {
     return gameService.getGame(id);
   }
 
   @PostMapping("/{id}/moves")
-  GameResponse makeMove(@PathVariable UUID id, @RequestBody MoveRequest move) {
+  GameResponse makeMove(@PathVariable String id, @RequestBody MoveRequest move) {
     return gameService.makeMove(id, move);
   }
 
   @PostMapping("/{id}/restart")
-  GameResponse restartGame(@PathVariable UUID id) {
+  GameResponse restartGame(@PathVariable String id) {
     return gameService.restartGame(id);
   }
 }

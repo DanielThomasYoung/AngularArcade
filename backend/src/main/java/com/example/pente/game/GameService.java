@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 class GameService {
-  private final ConcurrentMap<UUID, GameState> games = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, GameState> games = new ConcurrentHashMap<>();
   private final PenteRules rules;
 
   GameService(PenteRules rules) {
@@ -15,12 +15,12 @@ class GameService {
   }
 
   GameResponse createGame() {
-    GameState game = new GameState(UUID.randomUUID());
+    GameState game = new GameState(UUID.randomUUID().toString().substring(0, 6));
     games.put(game.id, game);
     return GameResponse.from(game);
   }
 
-  GameResponse getGame(UUID id) {
+  GameResponse getGame(String id) {
     GameState game = getExistingGame(id);
 
     synchronized (game) {
@@ -28,7 +28,7 @@ class GameService {
     }
   }
 
-  GameResponse makeMove(UUID id, MoveRequest move) {
+  GameResponse makeMove(String id, MoveRequest move) {
     GameState game = getExistingGame(id);
 
     synchronized (game) {
@@ -37,7 +37,7 @@ class GameService {
     }
   }
 
-  GameResponse restartGame(UUID id) {
+  GameResponse restartGame(String id) {
     GameState game = getExistingGame(id);
 
     synchronized (game) {
@@ -46,7 +46,7 @@ class GameService {
     }
   }
 
-  private GameState getExistingGame(UUID id) {
+  private GameState getExistingGame(String id) {
     GameState game = games.get(id);
 
     if (game == null) {
