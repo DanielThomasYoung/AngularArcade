@@ -70,3 +70,115 @@ button:hover {
 .pill:hover {
   background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
 }
+
+.win-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.win-message {
+  display: grid;
+  gap: 0.45rem;
+  min-width: min(22rem, 90%);
+  padding: 1.25rem 1.5rem;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--gray-900) 82%, black);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  color: var(--gray-100);
+  text-align: center;
+}
+
+.win-message.red-win {
+  color: color-mix(in srgb, crimson 76%, white);
+}
+
+.win-message.blue-win {
+  color: color-mix(in srgb, royalblue 76%, white);
+}
+
+.win-kicker,
+.win-restart-button {
+  color: var(--gray-200);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.win-kicker {
+  font-size: 0.75rem;
+}
+
+.win-message strong {
+  color: currentColor;
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.win-restart-button {
+  justify-self: center;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--gray-200) 45%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--gray-100) 10%, transparent);
+  font-size: 0.7rem;
+  pointer-events: auto;
+}
+
+.win-restart-button:hover {
+  background: color-mix(in srgb, var(--gray-100) 18%, transparent);
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti span {
+  position: absolute;
+  top: -1rem;
+  left: var(--x, 50%);
+  width: 0.45rem;
+  height: 0.8rem;
+  border-radius: 1px;
+  background: var(--color, gold);
+  opacity: 0;
+  animation: confetti-fall var(--duration, 2.8s) ease-in forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -1rem, 0) rotate(0deg);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift, 0), 110vh, 0) rotate(var(--spin, 500deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .win-message strong {
+    font-size: 2rem;
+  }
+}

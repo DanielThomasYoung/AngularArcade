@@ -1,0 +1,81 @@
+<div class="game-container">
+  <div class="game-header">
+    <div class="brand" aria-label="Pente">
+      <span class="logo-mark" aria-hidden="true">
+        <span class="logo-stone red-stone"></span>
+        <span class="logo-stone blue-stone"></span>
+        <span class="logo-stone red-stone"></span>
+        <span class="logo-stone blue-stone"></span>
+        <span class="logo-stone red-stone"></span>
+      </span>
+      <h1>Pente</h1>
+    </div>
+
+    <div class="status" [class.red-status]="winner() ? winner() === 1 : currentPlayer() === 1">
+      @if (winner()) {
+      <strong>{{ winSummary() }}</strong>
+      } @else {
+      <strong>{{ currentPlayer() === 1 ? 'Red' : 'Blue' }} to move</strong>
+      }
+    </div>
+
+    <div class="game-controls">
+      <div class="capture-panel" aria-label="Capture totals">
+        <span class="capture-title">Captures</span>
+        <div class="captures">
+          <span class="capture red-capture">Red {{ redCaptures() }}</span>
+          <span class="capture blue-capture">Blue {{ blueCaptures() }}</span>
+        </div>
+      </div>
+      <button class="restart-button" (click)="newGame()">Restart</button>
+    </div>
+  </div>
+
+  <div class="board-shell" [class.game-over]="winner()">
+    @if (winner()) {
+    <div class="confetti" aria-hidden="true">
+      <span style="--x: 4%; --color: crimson; --delay: 0s; --duration: 2.5s; --drift: 3rem; --spin: 430deg"></span>
+      <span style="--x: 9%; --color: royalblue; --delay: 0.12s; --duration: 2.9s; --drift: -2rem; --spin: -500deg"></span>
+      <span style="--x: 14%; --color: gold; --delay: 0.04s; --duration: 3.1s; --drift: 4rem; --spin: 540deg"></span>
+      <span style="--x: 19%; --color: mediumseagreen; --delay: 0.24s; --duration: 2.7s; --drift: -3rem; --spin: -390deg"></span>
+      <span style="--x: 25%; --color: crimson; --delay: 0.16s; --duration: 3s; --drift: 2rem; --spin: 460deg"></span>
+      <span style="--x: 31%; --color: royalblue; --delay: 0.02s; --duration: 2.8s; --drift: -4rem; --spin: -520deg"></span>
+      <span style="--x: 37%; --color: gold; --delay: 0.3s; --duration: 3.2s; --drift: 3rem; --spin: 600deg"></span>
+      <span style="--x: 43%; --color: mediumseagreen; --delay: 0.1s; --duration: 2.6s; --drift: -2rem; --spin: -470deg"></span>
+      <span style="--x: 49%; --color: crimson; --delay: 0.18s; --duration: 3.1s; --drift: 4rem; --spin: 530deg"></span>
+      <span style="--x: 55%; --color: royalblue; --delay: 0.05s; --duration: 2.7s; --drift: -3rem; --spin: -440deg"></span>
+      <span style="--x: 61%; --color: gold; --delay: 0.26s; --duration: 3s; --drift: 2rem; --spin: 510deg"></span>
+      <span style="--x: 67%; --color: mediumseagreen; --delay: 0.14s; --duration: 2.9s; --drift: -4rem; --spin: -560deg"></span>
+      <span style="--x: 73%; --color: crimson; --delay: 0s; --duration: 2.8s; --drift: 3rem; --spin: 480deg"></span>
+      <span style="--x: 79%; --color: royalblue; --delay: 0.22s; --duration: 3.2s; --drift: -2rem; --spin: -520deg"></span>
+      <span style="--x: 85%; --color: gold; --delay: 0.08s; --duration: 2.6s; --drift: 4rem; --spin: 620deg"></span>
+      <span style="--x: 91%; --color: mediumseagreen; --delay: 0.28s; --duration: 3.1s; --drift: -3rem; --spin: -420deg"></span>
+      <span style="--x: 7%; --color: royalblue; --delay: 0.42s; --duration: 2.8s; --drift: 5rem; --spin: 570deg"></span>
+      <span style="--x: 18%; --color: crimson; --delay: 0.38s; --duration: 3.3s; --drift: -4rem; --spin: -610deg"></span>
+    </div>
+
+    <div class="win-overlay" role="status" aria-live="polite">
+      <div class="win-message" [class.red-win]="winner() === 1" [class.blue-win]="winner() === 2">
+        <span class="win-kicker">Game over</span>
+        <strong>{{ winSummary() }}</strong>
+        <button class="win-restart-button" (click)="newGame()">Restart to play again</button>
+      </div>
+    </div>
+    }
+
+    <div class="game-grid">
+      @for (row of board(); track $index; let rowIndex = $index) { @for (cell of row; track $index;
+      let colIndex = $index) {
+      <button
+        class="game-button"
+        [class.player1]="cell === 1"
+        [class.player2]="cell === 2"
+        [disabled]="!!winner()"
+        (click)="makeMove(rowIndex, colIndex)"
+      >
+        {{ cell === 0 ? '' : cell === 1 ? 'R' : 'B' }}
+      </button>
+      } }
+    </div>
+  </div>
+</div>

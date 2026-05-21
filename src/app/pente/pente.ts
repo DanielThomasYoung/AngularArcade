@@ -13,19 +13,22 @@ const CAPTURE_DIRECTIONS = [
   [-1, 1],
 ] as const;
 
+type WinReason = 'line' | 'captures';
+
 @Component({
-  selector: 'app-game1',
+  selector: 'app-pente',
   imports: [],
-  templateUrl: './game1.html',
-  styleUrl: './game1.css',
+  templateUrl: './pente.html',
+  styleUrl: './pente.css',
 })
-export class Game1 {
+export class Pente {
   board = signal<number[][]>(this.createEmptyBoard());
 
   currentPlayer = signal(1);
   redCaptures = signal(0);
   blueCaptures = signal(0);
   winner = signal(0);
+  winReason = signal<WinReason | null>(null);
 
   makeMove(rowIndex: number, colIndex: number) {
     if (this.board()[rowIndex][colIndex] || this.winner()) {
@@ -42,7 +45,7 @@ export class Game1 {
     });
 
     if (this.checkForWin(rowIndex, colIndex, currentPlayer)) {
-      this.winner.set(currentPlayer);
+      this.setWinner(currentPlayer, 'line');
     }
 
     const newCaptures = this.checkForCaptures(rowIndex, colIndex, currentPlayer);
@@ -51,19 +54,35 @@ export class Game1 {
       if (currentPlayer === 1) {
         const redCaptures = this.redCaptures() + newCaptures;
         if (redCaptures >= 5) {
-          this.winner.set(1);
+          this.setWinner(1, 'captures');
         }
         this.redCaptures.set(redCaptures);
       } else {
         const blueCaptures = this.blueCaptures() + newCaptures;
         if (blueCaptures >= 5) {
-          this.winner.set(2);
+          this.setWinner(2, 'captures');
         }
         this.blueCaptures.set(blueCaptures);
       }
     }
 
     this.currentPlayer.set(currentPlayer === 1 ? 2 : 1);
+  }
+
+  winnerName() {
+    return this.winner() === 1 ? 'Red' : 'Blue';
+  }
+
+  winSummary() {
+    if (this.winReason() === 'line') {
+      return `${this.winnerName()} wins with 5 in a row`;
+    }
+
+    if (this.winReason() === 'captures') {
+      return `${this.winnerName()} wins with 5 captures`;
+    }
+
+    return `${this.winnerName()} wins`;
   }
 
   checkForWin(rowIndex: number, colIndex: number, player: number) {
@@ -217,6 +236,7 @@ export class Game1 {
     this.redCaptures.set(0);
     this.blueCaptures.set(0);
     this.winner.set(0);
+    this.winReason.set(null);
   }
 
   private createEmptyBoard() {
@@ -225,5 +245,14 @@ export class Game1 {
 
   private isInBounds(rowIndex: number, colIndex: number) {
     return rowIndex >= 0 && rowIndex < BOARD_SIZE && colIndex >= 0 && colIndex < BOARD_SIZE;
+  }
+
+  private setWinner(player: number, reason: WinReason) {
+    if (this.winner()) {
+      return;
+    }
+
+    this.winner.set(player);
+    this.winReason.set(reason);
   }
 }
