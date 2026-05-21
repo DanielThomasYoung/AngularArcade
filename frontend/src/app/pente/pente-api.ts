@@ -19,10 +19,12 @@ export class PenteApi {
   private readonly apiUrl = 'https://danpentebackend.onrender.com/api/games';
 
   createGame() {
+    console.log('Creating a new game', this.apiUrl);
     return this.http.post<GameState>(this.apiUrl, {});
   }
 
   getGame(id: string) {
+    console.log(`Fetching game with ID: ${id}`, this.apiUrl);
     return this.http.get<GameState>(`${this.apiUrl}/${id}`);
   }
 
