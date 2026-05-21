@@ -1,4 +1,14 @@
 <div class="game-container">
+  @if (isWaitingForBackend()) {
+  <div class="startup-screen" role="status" aria-live="polite" aria-busy="true">
+    <div class="startup-panel">
+      <span class="startup-spinner" aria-hidden="true"></span>
+      <strong>{{ backendWaitTitle() }}</strong>
+      <span>{{ backendWaitDetail() }}</span>
+    </div>
+  </div>
+  }
+
   <div class="game-header">
     <div class="brand" aria-label="Pente">
       <span class="logo-mark" aria-hidden="true">
