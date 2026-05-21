@@ -17,7 +17,9 @@ export interface GameState {
 export class PenteApi {
   private readonly http = inject(HttpClient);
   private readonly apiUrl =
-    window.location.port === '4200' ? 'http://localhost:8080/api/games' : '/api/games';
+    window.location.port === '4200'
+      ? 'https://danpentebackend.onrender.com/api/games'
+      : '/api/games';
 
   createGame() {
     return this.http.post<GameState>(this.apiUrl, {});
