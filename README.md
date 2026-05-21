@@ -36,6 +36,18 @@ mvn spring-boot:run
 
 The backend serves `/api/health` locally at `http://localhost:8080/api/health`.
 
+Game API:
+
+```text
+POST /api/games
+GET  /api/games/{id}
+POST /api/games/{id}/moves
+POST /api/games/{id}/restart
+```
+
+During local development, Angular runs on `http://localhost:4200` and calls the backend on
+`http://localhost:8080`.
+
 ## Backend Tests
 
 ```bash
@@ -60,6 +72,8 @@ Open `http://localhost:8080/`.
 Create a Render Web Service from this repository and choose Docker as the runtime. Render provides
 `PORT`; Spring Boot reads it with `server.port=${PORT:8080}`.
 
-## Next Backend Step
+## Next Backend Steps
 
-Move the Pente game state and rule validation into Spring Boot behind `/api/games`.
+- Add persistence for games and move history.
+- Replace polling with WebSockets if live updates need to feel instant.
+- Add API documentation for the game endpoints.
