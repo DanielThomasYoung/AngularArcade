@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 
-const BOARD_SIZE = 40;
+const BOARD_SIZE = 19;
 const WIN_LENGTH = 5;
 const CAPTURE_DIRECTIONS = [
   [0, 1],

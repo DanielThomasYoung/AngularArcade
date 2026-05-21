@@ -12,9 +12,7 @@
     </div>
 
     <div class="status" [class.red-status]="winner() ? winner() === 1 : currentPlayer() === 1">
-      @if (winner()) {
-      <strong>{{ winSummary() }}</strong>
-      } @else {
+      @if (!winner()) {
       <strong>{{ currentPlayer() === 1 ? 'Red' : 'Blue' }} to move</strong>
       }
     </div>

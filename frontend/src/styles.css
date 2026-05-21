@@ -46,6 +46,25 @@ button:hover {
   background-color: #444;
 }
 
+.game-container {
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.board-shell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.game-grid {
+  width: min(100%, 100vh - 7rem);
+}
+
 .pill {
   display: flex;
   align-items: center;
@@ -72,9 +91,9 @@ button:hover {
 }
 
 .win-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 3;
+  z-index: 30;
   display: grid;
   place-items: center;
   padding: 1rem;

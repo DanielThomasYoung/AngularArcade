@@ -1,0 +1,14 @@
+.git
+.angular
+.codex
+.agents
+.vscode
+frontend/.angular
+frontend/dist
+frontend/node_modules
+backend/target
+node_modules
+dist
+coverage
+npm-debug.log
+README.md

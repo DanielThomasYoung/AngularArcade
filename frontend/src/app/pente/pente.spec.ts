@@ -21,9 +21,9 @@ describe('Pente', () => {
   });
 
   it('should place a stone at the lower-right edge', () => {
-    expect(() => component.makeMove(39, 39)).not.toThrow();
+    expect(() => component.makeMove(18, 18)).not.toThrow();
 
-    expect(component.board()[39][39]).toBe(1);
+    expect(component.board()[18][18]).toBe(1);
     expect(component.currentPlayer()).toBe(2);
   });
 
